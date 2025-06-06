@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Giriş Yap</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(to right, rgb(238, 221, 200), rgb(230, 222, 243));
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        h1 {
+			color: rgb(217, 122, 161);
+            margin-bottom: 30px;
+            font-weight: 700;
+            font-size: 2.5rem;
+            text-align: center;
+            user-select: none;
+        }
+
+        .login-container {
+            background-color: rgb(242, 240, 207);
+            width: 360px;
+            height: 360px; /* kare div */
+            border-radius: 20px;
+            box-shadow: 0 6px 18px rgba(255, 182, 193, 0.3);
+            padding: 40px 30px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        label {
+            display: block;
+            color: rgb(237, 112, 45);
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1.5px solid #f7c7d0;
+            border-radius: 10px;
+            font-size: 15px;
+            background-color: #fff9fb;
+            color: #a3556a;
+        }
+
+		button {
+		        background-color: rgb(237, 112, 45);
+
+		        border: none;
+		        border-radius: 12px;
+		        padding: 14px 0;
+		        font-size: 20px;
+		        font-weight: 700;
+		        color: #6a244a;
+		        cursor: pointer;
+		        transition: background-color 0.3s ease;
+		        user-select: none;
+		        width: 60%;
+		        margin: 0 auto; 
+		        display: block; 
+		    }
+
+		    button:hover {
+		        background-color: #f097be;
+		    }
+    </style>
+</head>
+<body>
+    <h1>Giriş Yap</h1>
+    <div class="login-container">
+        <form action="#" th:action="@{/login}" method="post">
+            <label for="username">Kullanıcı Adı:</label>
+            <input type="text" id="username" name="username" required />
+
+            <label for="password">Şifre:</label>
+            <input type="password" id="password" name="password" required />
+
+            <button type="submit">Giriş Yap</button>
+        </form>
+
+        <p th:if="${error}" th:text="${error}"></p>
+    </div>
+</body>
+</html>

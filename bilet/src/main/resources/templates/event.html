@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Etkinlikler Listesi</title>
+    <style>
+		body {
+		    font-family: 'Segoe UI', sans-serif;
+		    background-color: #F5F1E9; 
+		    color: #5B3E6B; 
+		    margin: 0;
+		    padding: 0;
+		}
+
+		h1 {
+		    text-align: center;
+		    color: rgb(86, 27, 184);
+		    margin-top: 30px;
+		    font-weight: 700;
+		}
+
+		table {
+		    width: 80%;
+		    margin: 30px auto;
+		    border-collapse: collapse;
+		    background-color: #E7E1D7; 
+		    border-radius: 8px;
+		    overflow: hidden;
+		    box-shadow: 0 0 10px rgba(155, 121, 193, 0.3);
+		}
+
+		th {
+		    background-color: #8E6BAF; 
+		    color: #F5F1E9;
+		    padding: 12px;
+		    font-size: 16px;
+			border-right: 1px solid #8E6BAF;
+		}
+
+		td {
+		    background-color: #F0E9E1; 
+		    padding: 10px;
+		    text-align: center;
+		    border-bottom: 1px solid #E7E1D7;
+		    color: #5B3E6B;
+			border-right: 1px solid #8E6BAF;
+			border-bottom: 1px solid #8E6BAF; 
+			
+
+		}
+
+		button {
+		    background-color: #9A79C1; 
+		    color: #F5F1E9;
+		    padding: 8px 16px;
+		    font-weight: 600;
+		    border: none;
+		    border-radius: 6px;
+		    cursor: pointer;
+		    transition: background-color 0.3s ease;
+		    font-size: 14px;
+		}
+
+		button:hover {
+		    background-color: #7C59A3; 
+		}
+
+		.go-to-cart-container {
+		    text-align: center;
+		    margin: 40px 0;
+		}
+
+		#goToCart {
+		    background-color: #7D5B8A; 
+		    color: #F5F1E9;
+		    padding: 12px 24px;
+		    font-weight: 700;
+		    font-size: 16px;
+		    border-radius: 10px;
+		    box-shadow: 0 4px 12px rgba(125, 91, 138, 0.5);
+		    border: none;
+		    cursor: pointer;
+		    transition: background-color 0.3s ease;
+		}
+
+		#goToCart:hover {
+		    background-color: #6B4875; 
+		}
+
+
+    </style>
+</head>
+<body>
+    <h1>Etkinlikler Listesi</h1>
+
+    <table border="1" cellpadding="8" cellspacing="0">
+        <thead>
+            <tr>
+                <th>Etkinlik Adı</th>
+                <th>Tür</th>
+                <th>Tarih</th>
+                <th>Şehir</th>
+                <th>Fiyat</th>
+                <th>İşlem</th>
+            </tr>
+        </thead>
+        <tbody id="eventsTableBody">
+
+			        </tbody>
+    </table>
+
+    <div class="go-to-cart-container">
+        <button id="goToCart">Sepete Git</button>
+    </div>
+	  
+	  <script>
+	  		
+	  		window.addEventListener('load', () => {
+	  		    localStorage.removeItem('cart');
+	  		  });
+	  		
+	  		
+	  		const events = [
+	  		  {id:1, name:"Hayko Cepkin An Epic Senfoni", type:"Konser", date:"05.05.2025 20:00", city:"İstanbul", price:1200.0},
+	  		  {id:2, name:"Scorpions", type:"Konser", date:"10.06.2025 21:30", city:"Ankara", price:1550.0},
+	  		  {id:3, name:"Flo Rida", type:"Konser", date:"15.07.2025 19:00", city:"İzmir", price:990.0},
+	  		  {id:4, name:"Jason Mraz", type:"Konser", date:"22.07.2025 20:30", city:"Bursa", price:1200.0},
+	  		  {id:5, name:"Teoman", type:"Konser", date:"01.08.2025 21:00", city:"İstanbul", price:1300.0},
+	  		  {id:6, name:"Adamlar An Epic Senfoni", type:"Konser", date:"10.08.2025 19:30", city:"Ankara", price:1100.0},
+	  		  {id:7, name:"Duman", type:"Konser", date:"15.09.2025 20:00", city:"İzmir", price:1450.0},
+	  		  {id:8, name:"Ben Fero", type:"Konser", date:"20.09.2025 21:00", city:"Bursa", price:1150.0},
+	  		  {id:9, name:"Outlandish", type:"Konser", date:"25.09.2025 19:00", city:"İstanbul", price:1250.0},
+	  		  {id:10, name:"Adele", type:"Konser", date:"05.10.2025 20:00", city:"Ankara", price:1600.0},
+	  		  {id:11, name:"Dire Straits", type:"Konser", date:"15.10.2025 20:30", city:"İzmir", price:1450.0},
+	  		  {id:12, name:"Daft Punk", type:"Konser", date:"01.11.2025 21:00", city:"Bursa", price:1350.0},
+	  		  {id:13, name:"TolgShow", type:"Tiyatro", date:"10.05.2025 20:00", city:"İstanbul", price:800.0},
+	  		  {id:14, name:"Aydınlıkevler", type:"Tiyatro", date:"12.06.2025 19:30", city:"Ankara", price:750.0},
+	  		  {id:15, name:"Drakula", type:"Tiyatro", date:"05.07.2025 20:00", city:"İzmir", price:900.0},
+	  		  {id:16, name:"Saatleri Ayarlama Enstitüsü", type:"Tiyatro", date:"20.08.2025 20:00", city:"Bursa", price:850.0},
+	  		  {id:17, name:"Avengers Endgame", type:"Sinema", date:"18.05.2025 21:00", city:"İstanbul", price:3000.0},
+	  		  {id:18, name:"Thor Ragnarok", type:"Sinema", date:"20.06.2025 21:00", city:"Ankara", price:2900.0},
+	  		  {id:19, name:"Angels And Demons", type:"Sinema", date:"15.07.2025 22:00", city:"İzmir", price:3500.0},
+	  		  {id:20, name:"Inferno", type:"Sinema", date:"22.07.2025 21:30", city:"Bursa", price:3200.0},
+	  		  {id:21, name:"Lucy", type:"Sinema", date:"05.08.2025 20:00", city:"İstanbul", price:2400.0},
+	  		  {id:22, name:"Ford vs Ferrari", type:"Sinema", date:"12.08.2025 21:00", city:"Ankara", price:2600.0},
+	  		  {id:23, name:"Sixth Sense", type:"Sinema", date:"20.09.2025 20:30", city:"İzmir", price:1800.0},
+	  		  {id:24, name:"Multiverse Of Madness", type:"Sinema", date:"01.10.2025 21:00", city:"Bursa", price:2100.0}
+	  		];
+
+
+	  		      const tbody = document.getElementById('eventsTableBody');
+
+	  		      function getCart() {
+	  		        return JSON.parse(localStorage.getItem('cart')) || [];
+	  		      }
+
+	  		      function saveCart(cart) {
+	  		        localStorage.setItem('cart', JSON.stringify(cart));
+	  		      }
+
+	  		      function addToCart(eventId) {
+	  		        let cart = getCart();
+	  		        const event = events.find(e => e.id === eventId);
+	  		        if (!event) return;
+
+	  		        const cartItem = cart.find(item => item.id === eventId);
+	  		        if (cartItem) {
+	  		          cartItem.quantity++;
+	  		        } else {
+	  		          cart.push({...event, quantity: 1});
+	  		        }
+	  		        saveCart(cart);
+	  		        alert(`${event.name} sepete eklendi!`);
+	  		      }
+
+	  		      events.forEach(event => {
+	  		        const tr = document.createElement('tr');
+	  		        tr.innerHTML = `
+	  		          <td>${event.name}</td>
+	  		          <td>${event.type}</td>
+	  		          <td>${event.date}</td>
+	  		          <td>${event.city}</td>
+	  		          <td>${event.price} ₺</td>
+	  		          <td><button onclick="addToCart(${event.id})">Sepete Ekle</button></td>
+	  		        `;
+	  		        tbody.appendChild(tr);
+	  		      });
+
+	  		      document.getElementById('goToCart').addEventListener('click', () => {
+	  		        window.location.href = 'cart'; 
+	  		      });
+	  		    </script>
+	  		  
+
+
+</body>
+</html>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Sepetiniz</title>
+    <style>
+		body {
+		    font-family: 'Segoe UI', sans-serif;
+		    background: linear-gradient(to right, #f5f0e6, #f5f0e6); 
+		    margin: 0;
+		    padding: 0;
+		    color: #3a3a3a; 
+		}
+
+		h1, h2 {
+		    text-align: center;
+		    color: #7b6f8a; 
+		    margin-top: 30px;
+		}
+
+		table {
+		    width: 80%;
+		    border-collapse: collapse;
+		    margin: 30px auto;
+		    background-color: #d9d4e7; 
+		    box-shadow: 0 0 10px rgba(0, 100, 50, 0.1); 
+		    border-radius: 10px;
+		    overflow: hidden;
+		}
+
+		th {
+		    background-color: #6a7f58; 
+		    color: #f5f0e6; 
+		    padding: 12px;
+		    font-size: 16px;
+		}
+
+		td {
+		    background-color: #f5f0e6; 
+		    padding: 10px;
+		    text-align: center;
+		    border-bottom: 1px solid #9b95b3; 
+		}
+
+		#countdown {
+		    text-align: center;
+		    font-size: 18px;
+		    color: #355e3b; 
+		    font-weight: bold;
+		    background-color: #e6e2dc; 
+		    padding: 12px;
+		    margin: 20px auto;
+		    width: 60%;
+		    border-radius: 8px;
+		}
+
+		#confirmBtn {
+		    display: block;
+		    width: 220px;
+		    margin: 30px auto 10px;
+		    padding: 12px;
+		    background-color: #b39ddb; 
+		    color: #f5f0e6; 
+		    font-weight: bold;
+		    border: none;
+		    border-radius: 10px;
+		    font-size: 16px;
+		    cursor: pointer;
+		    transition: background-color 0.3s ease;
+		    box-shadow: 0 4px 10px rgba(179, 157, 219, 0.4);
+		}
+
+		#confirmBtn:hover {
+		    background-color: #9575cd; 
+		}
+
+
+		a {
+		    display: block;
+		    width: 200px;
+		    margin: 20px auto 40px;
+		    padding: 12px;
+		    background-color: rgb(225, 185, 140); 
+		    color: rgb(104, 54, 29); 
+		    text-align: center;
+		    text-decoration: none;
+		    font-weight: bold;
+		    border-radius: 10px;
+		    box-shadow: 0 4px 10px rgb(233, 205, 184);
+		    transition: background-color 0.3s ease;
+		}
+
+		a:hover {
+		    background-color: rgb(232, 201, 187); 
+		}
+	
+
+    </style>
+</head>
+<body>
+
+    <h1>Sepetinizdeki Etkinlikler</h1>
+
+    <div id="countdown">
+        Sepetinizi <span id="timer">15</span> saniye içinde onaylamazsanız sepetiniz sıfırlanacak.
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Etkinlik Adı</th>
+                <th>Tarih & Saat</th>
+                <th>İl</th>
+                <th>Fiyat</th>
+                <th>Adet</th>
+            </tr>
+        </thead>
+        <tbody id="cartBody">
+            
+        </tbody>
+    </table>
+
+    <h2 id="totalPrice"></h2>
+
+    <button id="confirmBtn">Sepeti Onayla</button>
+    <a href="event">Etkinliklere Geri Dön</a>
+
+    <script>
+      function getCart() {
+        return JSON.parse(localStorage.getItem('cart')) || [];
+      }
+
+      function saveCart(cart) {
+        localStorage.setItem('cart', JSON.stringify(cart));
+      }
+
+      function clearCart() {
+        localStorage.removeItem('cart');
+        renderCart();
+      }
+
+      function renderCart() {
+        const cart = getCart();
+        const tbody = document.getElementById('cartBody');
+        tbody.innerHTML = '';
+        let total = 0;
+
+        if (cart.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="5">Sepetiniz boş.</td></tr>`;
+          document.getElementById('totalPrice').textContent = '';
+          return;
+        }
+
+        cart.forEach(item => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${item.name}</td>
+            <td>${item.date}</td>
+            <td>${item.city}</td>
+            <td>${item.price} ₺</td>
+            <td>${item.quantity}</td>
+          `;
+          tbody.appendChild(tr);
+          total += item.price * item.quantity;
+        });
+
+        document.getElementById('totalPrice').textContent = `Sepetinizin Toplam Tutarı: ${total} ₺`;
+      }
+
+      function startCountdown() {
+        let timeLeft = 15;
+        const timerElement = document.getElementById('timer');
+        const countdownInterval = setInterval(() => {
+          timeLeft--;
+          timerElement.textContent = timeLeft;
+          
+          if (timeLeft <= 0) {
+            clearInterval(countdownInterval);
+            clearCart();
+            document.getElementById('countdown').innerHTML = 
+              '<span style="color: #ef6c00;">Sepet süresi dolduğu için sepetiniz sıfırlandı!</span>';
+          }
+        }, 1000);
+        
+        return countdownInterval;
+      }
+      document.addEventListener('DOMContentLoaded', function() {
+        renderCart();
+        
+        if (getCart().length === 0) {
+          document.getElementById('countdown').style.display = 'none';
+          document.getElementById('confirmBtn').style.display = 'none';
+          return;
+        }
+        
+        let countdownInterval = startCountdown();
+        
+        document.getElementById('confirmBtn').addEventListener('click', function() {
+          clearInterval(countdownInterval);
+          document.getElementById('countdown').innerHTML = 
+            '<span style="color:green;">Sepetiniz onaylandı!</span>';
+        
+        });
+        
+        document.querySelector('a[href="event"]').addEventListener('click', function(e) {
+          clearInterval(countdownInterval);
+        });
+      });
+    </script>
+</body>
+</html>
